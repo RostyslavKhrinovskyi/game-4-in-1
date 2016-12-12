@@ -2,7 +2,9 @@ var fieldsGame = {
 
     vertical: 7,
     horizontal: 7,
-
+    lastNumberInSuccessCombination: 3,
+    successCount: 4,
+    win: false,
     gameHead: document.getElementById('gameHead'),
     gameBody: document.getElementById('gameBody'),
 
@@ -15,7 +17,7 @@ var fieldsGame = {
 
         var head = '';
 
-        for (row = 1; row <= this.vertical; ++row) {
+        for (var row = 1; row <= this.vertical; ++row) {
             head += '<th data-row="' + row + '"></th>'
         }
 
@@ -26,9 +28,9 @@ var fieldsGame = {
 
         var body = '';
 
-        for (row = 1; row <= this.vertical; ++row) {
+        for (var row = 1; row <= this.vertical; ++row) {
             body += '<tr data-row="' + row + '">';
-            for (column = 1; column <= this.horizontal; ++column) {
+            for (var column = 1; column <= this.horizontal; ++column) {
                 body += '<td data-column="' + column + '"></td>';
             }
             body += '</tr>';
@@ -45,7 +47,7 @@ var fieldsGame = {
         var currentColumn = lastRow.querySelector('[data-column="' + ballPosition + '"]');
 
         if (currentColumn.hasChildNodes() === false) {
-            ball.setAttribute('data-x', rowPosition);
+            ball.setAttribute('data-x', ballPosition);
             ball.setAttribute('data-y', lastRow.getAttribute('data-row'));
 
             currentColumn.innerHTML = ball.outerHTML;
@@ -59,8 +61,9 @@ var fieldsGame = {
     },
 
     checkWinCombinations: function () {
+
         var rows = this.gameBody.querySelectorAll('[data-row]');
-        var t = this;
+        var self = this;
 
         rows.forEach(function (row) {
             var columns = row.childNodes;
@@ -75,29 +78,113 @@ var fieldsGame = {
                 var y = column.childNodes[0].getAttribute('data-y');
                 var currentColor = column.childNodes[0].getAttribute('id');
 
-                t.checkTopVertical(x,y,currentColor);
+                self.checkVertical(x, y, currentColor);
+                self.checkHorizontal(x, y, currentColor);
+                self.checkDiagonalRight(x, y, currentColor);
+                self.checkDiagonalLeft(x, y, currentColor);
 
             })
         });
     },
 
-    checkTopVertical: function (x,y, color) {
+    checkVertical: function (x, y, color) {
 
         var success = 1;
+        var lastNumber = this.lastNumberInSuccessCombination;
 
-        if ((y - 3) < 1) {
+        if ((y - lastNumber) < 1) {
             return;
         }
 
-        var test = this.gameBody.querySelector('[data-y="' + (y-3) + '"][data-x="'+ x +'"]');
+        for (var i = lastNumber; i >= 1; --i) {
+            var winnerColor = this.findAndCheckWinnerColor(x, (y - i));
+            if (winnerColor !== null && color === winnerColor) {
+                success++;
+            }
+        }
 
-        console.log(test);
-        if (color === 1) {
-            ++success;
-        } // x, y -3
+        if (success === this.successCount) {
+            this.win = true;
+        }
+
+    },
+
+    checkHorizontal: function (x, y, color) {
+
+        var success = 1;
+        var lastNumber = this.lastNumberInSuccessCombination;
+
+        if ((x - lastNumber) < 1) {
+            return;
+        }
+
+        for (var i = lastNumber; i >= 1; --i) {
+            var winnerColor = this.findAndCheckWinnerColor((x - i), y);
+            if (winnerColor !== null && color === winnerColor) {
+                success++;
+            }
+        }
+
+        if (success === this.successCount) {
+            this.win = true;
+        }
+    },
+
+    checkDiagonalRight: function (x, y, color) {
+
+        var success = 1;
+        var lastNumber = this.lastNumberInSuccessCombination;
+
+        if ((y - lastNumber) < 1 && (x + lastNumber) < lastNumber) {
+            return;
+        }
+
+        for (var i = lastNumber; i >= 1; --i) {
+            var winnerColor = this.findAndCheckWinnerColor((Number(x) + i), (y - i));
+            if (winnerColor !== null && color === winnerColor) {
+                success++;
+            }
+        }
+
+        if (success === this.successCount) {
+            this.win = true;
+        }
+    },
+
+    checkDiagonalLeft: function (x, y, color) {
+
+        var success = 1;
+        var lastNumber = this.lastNumberInSuccessCombination;
 
 
+        if ((y + lastNumber) < lastNumber && (x + lastNumber) < lastNumber) {
+            return;
+        }
+
+        for (var i = lastNumber; i >= 1; --i) {
+            var winnerColor = this.findAndCheckWinnerColor((Number(x) + i), (Number(y) + i));
+            if (winnerColor !== null && color === winnerColor) {
+                success++;
+            }
+        }
+
+        if (success === this.successCount) {
+            this.win = true;
+        }
+    },
+
+    findAndCheckWinnerColor: function (positionX, positionY) {
+
+        var winnerColor = null;
+        var winnerBall = this.gameBody.querySelector('[data-y="' + positionY + '"][data-x="' + positionX + '"]');
+
+        if (winnerBall !== null) {
+            winnerColor = winnerBall.getAttribute('id');
+        }
+
+        return winnerColor;
     }
+
 };
 
 var ball = {
@@ -156,6 +243,10 @@ fieldsGame.gameHead.onclick = function (event) {
 
     fieldsGame.setField(currentBall, 1);
     fieldsGame.checkWinCombinations(currentBall);
+
+    if (fieldsGame.win) {
+        alert(ballColor + ' Winner!');
+    }
 };
 
 

@@ -2,13 +2,13 @@
 .game{
     margin: 0 auto;
     width: 400px;
-    background: #87c593;
+    background: #ace5ff;
 }
 
 .game table{
     width: 100%;
     border-collapse: collapse;
-    border: 2px solid #ff4e7b;
+    border: 2px solid #5656ac;
 
 }
 .game table th{
@@ -16,13 +16,13 @@
 }
 
 .game table td{
-    border: 2px solid #ff4e7b;
+    border: 2px solid #5656ac;
     height: 50px;
 }
 
 #red {
     height: 50px;
-    background: red;
+    background: #ff4a63;
     border-radius: 100%;
     margin: 0 auto;
     cursor: pointer;
@@ -30,7 +30,7 @@
 
 #blue {
     height: 50px;
-    background: blue;
+    background: #6654ff;
     border-radius: 100%;
     margin: 0 auto;
     cursor: pointer;
