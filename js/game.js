@@ -13,6 +13,15 @@ var fieldsGame = {
         this.gameBody.innerHTML = fieldsGame.generateBody();
     },
 
+    refreshGame: function () {
+        var fieldsWithBalls = this.gameBody.querySelectorAll('div');
+        this.win = false;
+
+        fieldsWithBalls.forEach(function (val) {
+            val.remove();
+        })
+    },
+
     generateHead: function () {
 
         var head = '';
@@ -47,17 +56,18 @@ var fieldsGame = {
         var currentColumn = lastRow.querySelector('[data-column="' + ballPosition + '"]');
 
         if (currentColumn.hasChildNodes() === false) {
+
             ball.setAttribute('data-x', ballPosition);
             ball.setAttribute('data-y', lastRow.getAttribute('data-row'));
 
             currentColumn.innerHTML = ball.outerHTML;
+
         } else {
 
             if (rowPosition !== this.vertical) {
                 this.setField(ball, ++rowPosition)
             }
         }
-
     },
 
     checkWinCombinations: function () {
@@ -106,7 +116,6 @@ var fieldsGame = {
         if (success === this.successCount) {
             this.win = true;
         }
-
     },
 
     checkHorizontal: function (x, y, color) {
@@ -194,6 +203,7 @@ var ball = {
 
     get: function () {
         this.ball.setAttribute('id', this.color);
+        this.ball.setAttribute('class', 'ball');
         return this.ball;
     },
 
@@ -215,7 +225,6 @@ var ball = {
 
 fieldsGame.init();
 
-
 fieldsGame.gameHead.onmouseover = function (event) {
 
     var target = event.target;
@@ -225,11 +234,9 @@ fieldsGame.gameHead.onmouseover = function (event) {
 
     var currentBall = ball.get();
     currentBall.dataset.position = row;
-    currentBall.dataset.type = 'ball';
 
     target.appendChild(currentBall);
 };
-
 
 fieldsGame.gameHead.onclick = function (event) {
 
@@ -240,14 +247,17 @@ fieldsGame.gameHead.onclick = function (event) {
 
     currentBall.remove();
     ball.switchBall(ballColor);
-
     fieldsGame.setField(currentBall, 1);
     fieldsGame.checkWinCombinations(currentBall);
 
     if (fieldsGame.win) {
-        alert(ballColor + ' Winner!');
+        setTimeout(function () {
+            alert(ballColor + ' Winner!');
+            fieldsGame.refreshGame();
+        }, 20);
     }
 };
+
 
 
 

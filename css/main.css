@@ -21,16 +21,16 @@
 }
 
 #red {
-    height: 50px;
     background: #ff4a63;
-    border-radius: 100%;
-    margin: 0 auto;
-    cursor: pointer;
 }
 
 #blue {
-    height: 50px;
     background: #6654ff;
+}
+
+.ball{
+    position: relative;
+    height: 50px;
     border-radius: 100%;
     margin: 0 auto;
     cursor: pointer;
