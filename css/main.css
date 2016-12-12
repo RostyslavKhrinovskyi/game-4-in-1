@@ -1,0 +1,37 @@
+
+.game{
+    margin: 0 auto;
+    width: 400px;
+    background: #87c593;
+}
+
+.game table{
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #ff4e7b;
+
+}
+.game table th{
+    height: 50px;
+}
+
+.game table td{
+    border: 2px solid #ff4e7b;
+    height: 50px;
+}
+
+#red {
+    height: 50px;
+    background: red;
+    border-radius: 100%;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+#blue {
+    height: 50px;
+    background: blue;
+    border-radius: 100%;
+    margin: 0 auto;
+    cursor: pointer;
+}
